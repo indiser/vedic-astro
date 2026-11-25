@@ -1,0 +1,7 @@
+tzdata
+pysweph
+flask
+httpx
+curl-cffi
+timezonefinder
+pillow

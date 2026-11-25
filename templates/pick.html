@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pick place</title>
+  <link rel="stylesheet" href="/static/static.css">
+  <script src="/static/static.js" defer></script>
+</head>
+<body>
+  <div class="cosmos-backdrop"></div>
+  <canvas id="cosmos-canvas"></canvas>
+  <svg class="astrolabe-halo" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+    <circle cx="200" cy="200" r="190" stroke="#e6b85c" stroke-width="0.7" stroke-dasharray="4 6"/>
+    <circle cx="200" cy="200" r="155" stroke="#e6b85c" stroke-width="0.9"/>
+    <polygon points="200,12 388,200 200,388 12,200" stroke="#e6b85c" stroke-width="0.6"/>
+  </svg>
+
+  <nav class="astral-nav">
+    <a href="/" class="astral-brand">
+      <span class="astral-emblem">&#9788;</span>
+      <span>Jyotish Observatory</span>
+    </a>
+    <div class="astral-nav-tools">
+      <span style="font-size:11px; letter-spacing:1.5px; color:var(--text-secondary);">MERIDIAN LOCK</span>
+    </div>
+  </nav>
+
+  <main class="astral-shell narrow">
+    <header class="celestial-hero">
+      <div class="zodiac-divider">&#9737; &#10022; &#9737;</div>
+      <h1 class="celestial-title">Pick birth place</h1>
+      <p class="celestial-subtitle">{{ date }} &bull; {{ time }} Local Time</p>
+    </header>
+
+    <section class="nebula-card">
+      <div class="nebula-card-head">
+        <h2 class="nebula-card-title">&#9733; Terrestrial Coordinates ({{ matches|length }})</h2>
+      </div>
+      <div class="nebula-card-body">
+        <form method="post" action="/chart" data-astral-loader>
+          <input type="hidden" name="date" value="{{ date }}">
+          <input type="hidden" name="time" value="{{ time }}">
+          <input type="hidden" name="lat" required>
+          <input type="hidden" name="lon" required>
+
+          <div class="place-stack">
+            {% for m in matches %}
+            <label class="place-option">
+              <span class="place-option-left">
+                <input type="radio"
+                       name="coords"
+                       data-lat="{{ m.lat }}"
+                       data-lon="{{ m.lon }}"
+                       required
+                       onclick="this.form.lat.value='{{ m.lat }}';this.form.lon.value='{{ m.lon }}'">
+                <span class="place-title">{{ m.name }}</span>
+              </span>
+              <span class="place-coords">{{ m.lat }}, {{ m.lon }}</span>
+            </label>
+            {% endfor %}
+          </div>
+
+          <div class="ephemeris-readout" id="coord-readout">SELECT A TERRESTRIAL ORIGIN ABOVE</div>
+
+          <div class="astral-actions" style="margin-top: 20px;">
+            <a href="/" class="btn-astral">&larr; Back</a>
+            <button type="submit" class="btn-astral btn-astral-primary">Make chart &#10022;</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div class="orbital-loader" id="orbital-loader">
+    <div class="orbit-ring"></div>
+    <div class="orbit-text">Aligning Grahas &amp; Nakshatras...</div>
+  </div>
+</body>
+</html>

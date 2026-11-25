@@ -1,0 +1,694 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --void-bg: #04030c;
+  --nebula-deep: #0b0820;
+  --glass-bg: rgba(14, 11, 36, 0.72);
+  --glass-bg-elevated: rgba(22, 17, 52, 0.85);
+  --glass-border: rgba(230, 184, 92, 0.24);
+  --glass-border-bright: rgba(230, 184, 92, 0.58);
+  --gold-primary: #e6b85c;
+  --gold-light: #ffe29a;
+  --gold-glow: rgba(230, 184, 92, 0.28);
+  --astral-cyan: #67e8f9;
+  --nebula-violet: #a855f7;
+  --nebula-rose: #f472b6;
+  --text-primary: #f5f2eb;
+  --text-secondary: #b4afd1;
+  --text-muted: #7b749c;
+  --danger-bg: rgba(127, 29, 29, 0.45);
+  --danger-border: #f87171;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--void-bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Deep Space Nebula Layers */
+.cosmos-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background:
+    radial-gradient(ellipse 75% 55% at 15% 15%, rgba(88, 28, 135, 0.34), transparent 65%),
+    radial-gradient(ellipse 65% 50% at 85% 25%, rgba(30, 58, 138, 0.32), transparent 65%),
+    radial-gradient(ellipse 70% 60% at 50% 90%, rgba(131, 24, 67, 0.22), transparent 70%),
+    radial-gradient(circle at 50% 45%, #0c0924 0%, #04030c 100%);
+}
+
+#cosmos-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Ambient Rotating Astrolabe Ring */
+.astrolabe-halo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(880px, 135vw);
+  height: min(880px, 135vw);
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.14;
+  animation: slowOrbit 140s linear infinite;
+}
+
+@keyframes slowOrbit {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Top Celestial Navigation */
+.astral-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(6, 5, 18, 0.72);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.astral-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.astral-emblem {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-primary);
+  font-size: 14px;
+  box-shadow: 0 0 14px var(--gold-glow);
+}
+
+.astral-nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Layout Shells */
+.astral-shell {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.astral-shell.narrow {
+  max-width: 620px;
+  padding-top: 48px;
+}
+
+/* Hero Typography */
+.celestial-hero {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.zodiac-divider {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--gold-primary);
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.zodiac-divider::before,
+.zodiac-divider::after {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+}
+
+.celestial-title {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4.5vw, 44px);
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #fff5d6 0%, #e6b85c 50%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 24px rgba(230, 184, 92, 0.22));
+}
+
+.celestial-subtitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 19px;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+/* Frosted Observatory Card */
+.nebula-card {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.nebula-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+  opacity: 0.7;
+}
+
+.nebula-card-head {
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(230, 184, 92, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.nebula-card-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nebula-card-body {
+  padding: 24px;
+}
+
+/* Buttons */
+.btn-astral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border-bright);
+  background: rgba(230, 184, 92, 0.1);
+  color: var(--gold-light);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.btn-astral:hover {
+  background: rgba(230, 184, 92, 0.22);
+  border-color: var(--gold-light);
+  box-shadow: 0 0 22px var(--gold-glow);
+  transform: translateY(-1px);
+}
+
+.btn-astral-primary {
+  background: linear-gradient(135deg, #d49b38 0%, #f3cf7a 50%, #c88a28 100%);
+  color: #0b0719;
+  border: none;
+  font-weight: 700;
+  box-shadow: 0 6px 24px rgba(230, 184, 92, 0.32);
+}
+
+.btn-astral-primary:hover {
+  background: linear-gradient(135deg, #e5ad48 0%, #ffe6a3 50%, #d99b38 100%);
+  color: #060410;
+  box-shadow: 0 8px 30px rgba(230, 184, 92, 0.48);
+}
+
+.btn-astral-sm {
+  padding: 6px 13px;
+  font-size: 11px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-astral.is-active {
+  background: rgba(168, 85, 247, 0.28);
+  border-color: #d8b4fe;
+  color: #f3e8ff;
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
+}
+
+/* Forms */
+.astral-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.astral-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 540px) {
+  .astral-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.astral-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.astral-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--gold-primary);
+}
+
+.astral-input {
+  width: 100%;
+  background: rgba(6, 5, 18, 0.78);
+  color: var(--text-primary);
+  border: 1px solid rgba(230, 184, 92, 0.28);
+  border-radius: var(--radius-md);
+  padding: 12px 15px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color-scheme: dark;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.astral-input::placeholder {
+  color: var(--text-muted);
+}
+
+.astral-input:focus {
+  outline: none;
+  border-color: var(--gold-light);
+  background: rgba(14, 11, 36, 0.95);
+  box-shadow: 0 0 0 3px rgba(230, 184, 92, 0.16), 0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+.astral-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+/* Error Alert */
+.astral-alert {
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  border-radius: var(--radius-md);
+  color: #fecaca;
+  padding: 13px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.astral-alert-icon {
+  color: #f87171;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* Place Selection Cards (pick.html) */
+.place-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.place-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  background: rgba(9, 7, 26, 0.65);
+  border: 1px solid rgba(230, 184, 92, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.place-option:hover {
+  border-color: rgba(230, 184, 92, 0.55);
+  background: rgba(22, 17, 52, 0.78);
+}
+
+.place-option.is-selected {
+  border-color: var(--gold-light);
+  background: linear-gradient(135deg, rgba(230, 184, 92, 0.16), rgba(168, 85, 247, 0.14));
+  box-shadow: 0 0 24px rgba(230, 184, 92, 0.18);
+}
+
+.place-option-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.place-option input[type="radio"] {
+  accent-color: var(--gold-primary);
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+.place-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.place-coords {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--astral-cyan);
+  background: rgba(103, 232, 249, 0.08);
+  border: 1px solid rgba(103, 232, 249, 0.22);
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.ephemeris-readout {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(6, 5, 18, 0.65);
+  border: 1px dashed rgba(230, 184, 92, 0.35);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--gold-light);
+  text-align: center;
+  letter-spacing: 0.6px;
+}
+
+/* Telemetry Bento Strip (result.html) */
+.cosmic-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cosmic-kpi {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  position: relative;
+}
+
+.cosmic-kpi-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.cosmic-kpi-value {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--gold-light);
+  margin: 6px 0 4px;
+}
+
+.cosmic-kpi-sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--astral-cyan);
+}
+
+/* Split Chart & Tables Workspace */
+.observatory-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 500px) 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .observatory-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kundali-viewport {
+  position: relative;
+  border-radius: var(--radius-md);
+  padding: 12px;
+  background: radial-gradient(circle at center, rgba(230, 184, 92, 0.08), rgba(4, 3, 12, 0.9));
+  border: 1px solid rgba(230, 184, 92, 0.3);
+  text-align: center;
+}
+
+.kundali-viewport img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 8px;
+  transition: filter 0.3s ease;
+}
+
+.kundali-viewport.is-inverted img {
+  filter: invert(0.92) hue-rotate(180deg) saturate(1.35);
+}
+
+.kundali-footnote {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Celestial Data Tables */
+.astral-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.astral-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.astral-table th {
+  padding: 11px 14px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--gold-primary);
+  background: rgba(6, 5, 18, 0.65);
+  border-bottom: 1px solid rgba(230, 184, 92, 0.25);
+  white-space: nowrap;
+}
+
+.astral-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+}
+
+.astral-table tbody tr {
+  transition: background-color 0.16s ease;
+}
+
+.astral-table tbody tr:hover {
+  background: rgba(230, 184, 92, 0.08);
+}
+
+.astral-table tbody tr.is-current-dasha {
+  background: linear-gradient(90deg, rgba(230, 184, 92, 0.18), rgba(168, 85, 247, 0.14));
+}
+
+.astral-table tbody tr.is-current-dasha td:first-child {
+  border-left: 3px solid var(--gold-light);
+}
+
+.graha-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.glyph-orb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(230, 184, 92, 0.12);
+  border: 1px solid rgba(230, 184, 92, 0.35);
+  color: var(--gold-light);
+  font-size: 12px;
+}
+
+.mono-val {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--astral-cyan);
+}
+
+.pill-retro {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(244, 114, 182, 0.16);
+  border: 1px solid rgba(244, 114, 182, 0.45);
+  color: #f9a8d4;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pill-active {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(103, 232, 249, 0.15);
+  border: 1px solid rgba(103, 232, 249, 0.45);
+  color: var(--astral-cyan);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+/* Orbital Loading Overlay */
+.orbital-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(4, 3, 12, 0.86);
+  backdrop-filter: blur(12px);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.orbital-loader.is-visible {
+  display: flex;
+}
+
+.orbit-ring {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2px solid rgba(230, 184, 92, 0.2);
+  border-top-color: var(--gold-light);
+  border-right-color: var(--nebula-violet);
+  animation: spinOrbit 1.1s linear infinite;
+  position: relative;
+}
+
+.orbit-ring::after {
+  content: "\2726";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-light);
+  font-size: 20px;
+}
+
+.orbit-text {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+@keyframes spinOrbit {
+  to { transform: rotate(360deg); }
+}

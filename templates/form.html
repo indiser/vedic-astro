@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vedic Chart</title>
+  <link rel="stylesheet" href="/static/static.css">
+  <script src="/static/static.js" defer></script>
+</head>
+<body>
+  <div class="cosmos-backdrop"></div>
+  <canvas id="cosmos-canvas"></canvas>
+  <svg class="astrolabe-halo" viewBox="0 0 400 400" fill="none" aria-hidden="true">
+    <circle cx="200" cy="200" r="190" stroke="#e6b85c" stroke-width="0.7" stroke-dasharray="4 6"/>
+    <circle cx="200" cy="200" r="155" stroke="#e6b85c" stroke-width="0.9"/>
+    <circle cx="200" cy="200" r="115" stroke="#a855f7" stroke-width="0.6" stroke-dasharray="2 4"/>
+    <polygon points="200,12 388,200 200,388 12,200" stroke="#e6b85c" stroke-width="0.6"/>
+    <polygon points="67,67 333,67 333,333 67,333" stroke="#67e8f9" stroke-width="0.5"/>
+  </svg>
+
+  <nav class="astral-nav">
+    <a href="/" class="astral-brand">
+      <span class="astral-emblem">&#9788;</span>
+      <span>Jyotish Observatory</span>
+    </a>
+    <div class="astral-nav-tools">
+      <span style="font-size:11px; letter-spacing:1.5px; color:var(--text-secondary);">LAHIRI SIDEREAL</span>
+    </div>
+  </nav>
+
+  <main class="astral-shell narrow">
+    <header class="celestial-hero">
+      <div class="zodiac-divider">&#9789; &#10022; &#9790;</div>
+      <h1 class="celestial-title">Vedic Chart</h1>
+      <p class="celestial-subtitle">Cast your sidereal Janma Kundali across time and cosmos</p>
+    </header>
+
+    {% if error %}
+    <div class="astral-alert" role="alert">
+      <span class="astral-alert-icon">&#9888;</span>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <section class="nebula-card">
+      <div class="nebula-card-head">
+        <h2 class="nebula-card-title">&#10023; Natal Ephemeris Input</h2>
+      </div>
+      <div class="nebula-card-body">
+        <form method="post" action="/search" class="astral-form" data-astral-loader>
+          <div class="astral-grid-2">
+            <div class="astral-field">
+              <label class="astral-label" for="date">Date</label>
+              <input id="date" class="astral-input" type="date" name="date" required>
+            </div>
+            <div class="astral-field">
+              <label class="astral-label" for="time">Time (local, 24h)</label>
+              <input id="time" class="astral-input" type="time" name="time" required>
+            </div>
+          </div>
+
+          <div class="astral-field">
+            <label class="astral-label" for="place">Birth place</label>
+            <input id="place" class="astral-input" type="text" name="place" placeholder="Kolkata, India" required>
+          </div>
+
+          <div class="astral-actions">
+            <button type="submit" class="btn-astral btn-astral-primary">Find place &#10022;</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div class="orbital-loader" id="orbital-loader">
+    <div class="orbit-ring"></div>
+    <div class="orbit-text">Scanning Celestial Atlas...</div>
+  </div>
+</body>
+</html>

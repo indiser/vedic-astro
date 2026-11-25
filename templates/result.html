@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart</title>
+  <link rel="stylesheet" href="/static/static.css">
+  <script src="/static/static.js" defer></script>
+</head>
+<body>
+  <div class="cosmos-backdrop"></div>
+  <canvas id="cosmos-canvas"></canvas>
+
+  <nav class="astral-nav">
+    <a href="/" class="astral-brand">
+      <span class="astral-emblem">&#9788;</span>
+      <span>Jyotish Observatory</span>
+    </a>
+    <div class="astral-nav-tools">
+      <a href="/" class="btn-astral btn-astral-sm">New Chart &#10022;</a>
+    </div>
+  </nav>
+
+  <main class="astral-shell">
+    <header class="celestial-hero">
+      <div class="zodiac-divider">&#9789; &#9737; &#9790;</div>
+      <h1 class="celestial-title">Chart</h1>
+      <p class="celestial-subtitle">Lahiri Sidereal &bull; Whole-Sign Houses &bull; Mean Node</p>
+    </header>
+
+    <!-- Celestial Telemetry Strip -->
+    <section class="cosmic-kpis">
+      <div class="cosmic-kpi">
+        <div class="cosmic-kpi-label">Lagna</div>
+        <div class="cosmic-kpi-value" data-sign="{{ c.lagna.sign }}">{{ c.lagna.sign }} {{ c.lagna.deg_in_sign }}</div>
+        <div class="cosmic-kpi-sub">Ayanamsa {{ c.ayanamsa }}</div>
+      </div>
+
+      <div class="cosmic-kpi">
+        <div class="cosmic-kpi-label">Moon Sign (Rashi)</div>
+        <div class="cosmic-kpi-value" data-sign="{{ c.grahas.Moon.sign }}">{{ c.grahas.Moon.sign }} {{ c.grahas.Moon.deg_in_sign }}</div>
+        <div class="cosmic-kpi-sub">{{ c.grahas.Moon.nakshatra }} pada {{ c.grahas.Moon.pada }}</div>
+      </div>
+
+      <div class="cosmic-kpi">
+        <div class="cosmic-kpi-label">Epoch &amp; Meridian</div>
+        <div class="cosmic-kpi-value">TZ {{ tz }}</div>
+        <div class="cosmic-kpi-sub">UTC {{ utc }}</div>
+      </div>
+
+      <div class="cosmic-kpi">
+        <div class="cosmic-kpi-label">Vimshottari Birth Lord</div>
+        <div class="cosmic-kpi-value">{{ d.birth_lord }}</div>
+        <div class="cosmic-kpi-sub">Balance {{ d.balance_years }} yr (year = {{ d.year_days }} days)</div>
+      </div>
+
+      {% if d.current_maha %}
+      <div class="cosmic-kpi">
+        <div class="cosmic-kpi-label">Now (Maha / Antar)</div>
+        <div class="cosmic-kpi-value">{{ d.current_maha.lord }} / {{ d.current_antar.lord if d.current_antar else "-" }}</div>
+        <div class="cosmic-kpi-sub">Active Planetary Period</div>
+      </div>
+      {% endif %}
+    </section>
+
+    <!-- Main Observatory Split -->
+    <div class="observatory-grid">
+      <!-- Left: North Indian Kundali -->
+      <section class="nebula-card">
+        <div class="nebula-card-head">
+          <h2 class="nebula-card-title">&#10023; North Indian Chart</h2>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn-astral btn-astral-sm" id="toggle-chart-invert">Night Invert</button>
+            <a class="btn-astral btn-astral-sm btn-astral-primary" href="data:image/png;base64,{{ png }}" download="chart.png">Download PNG</a>
+          </div>
+        </div>
+        <div class="nebula-card-body">
+          <div class="kundali-viewport" id="kundali-viewport">
+            <img src="data:image/png;base64,{{ png }}" alt="North Indian chart">
+          </div>
+          <p class="kundali-footnote">
+            Lahiri sidereal, whole-sign houses, mean node. Ayanamsa {{ c.ayanamsa }}. TZ {{ tz }}, UTC {{ utc }}.
+          </p>
+        </div>
+      </section>
+
+      <!-- Right: Grahas & Vimshottari -->
+      <div>
+        <section class="nebula-card">
+          <div class="nebula-card-head">
+            <h2 class="nebula-card-title">&#9737; Grahas</h2>
+            <button type="button" class="btn-astral btn-astral-sm" id="toggle-retro">Retrograde Only</button>
+          </div>
+          <div class="astral-table-wrap">
+            <table class="astral-table" id="graha-table">
+              <thead>
+                <tr>
+                  <th>Graha</th>
+                  <th>Sign</th>
+                  <th>Deg</th>
+                  <th>House</th>
+                  <th>Nakshatra</th>
+                  <th>Pada</th>
+                  <th>Retro</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for name, g in c.grahas.items() %}
+                <tr data-retro="{{ 'true' if g.retro else 'false' }}">
+                  <td>
+                    <span class="graha-cell" data-graha="{{ name }}">
+                      <span class="glyph-orb">&#10022;</span>
+                      <span>{{ name }}</span>
+                    </span>
+                  </td>
+                  <td data-sign="{{ g.sign }}">{{ g.sign }}</td>
+                  <td class="mono-val">{{ g.deg_in_sign }}</td>
+                  <td class="mono-val">{{ g.house }}</td>
+                  <td>{{ g.nakshatra }}</td>
+                  <td class="mono-val">{{ g.pada }}</td>
+                  <td>{% if g.retro %}<span class="pill-retro">R</span>{% endif %}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="nebula-card">
+          <div class="nebula-card-head">
+            <h2 class="nebula-card-title">&#9789; Vimshottari</h2>
+            <span class="mono-val">{{ d.birth_lord }} &bull; {{ d.balance_years }} yr</span>
+          </div>
+          <div class="astral-table-wrap">
+            <table class="astral-table">
+              <thead>
+                <tr>
+                  <th>Maha</th>
+                  <th>Start</th>
+                  <th>End</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for m in d.mahadashas %}
+                <tr data-start="{{ m.start.strftime('%Y-%m-%d') }}" data-end="{{ m.end.strftime('%Y-%m-%d') }}">
+                  <td>
+                    <span class="graha-cell" data-graha="{{ m.lord }}">
+                      <span class="glyph-orb">&#10022;</span>
+                      <span>{{ m.lord }}</span>
+                    </span>
+                  </td>
+                  <td class="mono-val">{{ m.start.strftime("%Y-%m-%d") }}</td>
+                  <td class="mono-val">{{ m.end.strftime("%Y-%m-%d") }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+        <section class="nebula-card">
+      <div class="nebula-card-head">
+        <h2 class="nebula-card-title">&#9790; Daily Horoscope</h2>
+          {% if h %}<span class="mono-val">{{ h.data.sign|capitalize }} (Moon sign)</span>{% endif %}
+      </div>
+      <div class="nebula-card-body">
+        {% if h %}
+          {% if h.stale %}
+          <p class="kundali-footnote"><i>Old text, not updated today.</i></p>
+          {% endif %}
+          <p>{{ h.data.horoscope }}</p>
+          <p><b>Love:</b> {{ h.data.love }}</p>
+          <p><b>Finance:</b> {{ h.data.finance }}</p>
+          <p><b>Career:</b> {{ h.data.career }}</p>
+          <p><b>Health:</b> {{ h.data.health }}</p>
+          {% if h.data.lucky_number %}
+          <p class="mono-val">Lucky number {{ h.data.lucky_number }}
+            {% if h.data.auspicious_time_ist %}&bull; Auspicious time {{ h.data.auspicious_time_ist }}{% endif %}</p>
+          {% endif %}
+        {% else %}
+          <p class="kundali-footnote">Horoscope unavailable right now.</p>
+        {% endif %}
+        <p class="kundali-footnote">General sign-based text. Not computed from your chart. Not validated prediction.</p>
+      </div>
+    </section>
+
+    <div class="astral-actions">
+      <a href="/" class="btn-astral">&larr; again</a>
+    </div>
+  </main>
+</body>
+</html>
